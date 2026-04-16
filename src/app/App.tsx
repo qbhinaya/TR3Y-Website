@@ -81,13 +81,13 @@ export default function App() {
             
             {/* Right: Menu */}
             <div className="flex items-center gap-2 sm:gap-4">
-              <button 
+              {/* <button 
                 onClick={() => scrollToSection('about')}
                 className="bg-white border-2 border-black px-3 py-2 hover:bg-[#FFFFB0] transition-colors pixel-box-shadow flex items-center gap-2"
               >
                 <Info className="w-3 h-3 sm:w-4 sm:h-4" />
                 <span className="text-[10px] sm:text-xs text-[#FF9B00] hidden cursor-pointer sm:inline">ABOUT</span>
-              </button>
+              </button> */}
               <button 
                 onClick={() => scrollToSection('contact')}
                 className="bg-white border-2 border-black px-3 py-2 hover:bg-[#FFFFB0] transition-colors pixel-box-shadow flex items-center gap-2"
