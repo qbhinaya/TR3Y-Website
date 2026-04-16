@@ -8,7 +8,7 @@ import { Sparkles, Heart, Utensils, Info, Mail } from 'lucide-react';
 
 export default function App() {
   // Set target date - Grand Opening tanggal 1 Mei 2026
-  const targetDate = new Date('2026-05-01T10:00:00');
+  const targetDate = new Date('2026-05-23T10:00:00');
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
@@ -148,7 +148,7 @@ export default function App() {
                   {/* Status 2 */}
                   <div className="bg-white border-4 border-[#FF9B00] p-3">
                     <div className="text-[8px] text-gray-600 mb-1">DATE</div>
-                    <div className="text-xs text-[#FF9B00]">XX MEI 2026</div>
+                    <div className="text-xs text-[#FF9B00]">23 MEI 2026</div>
                   </div>
                 </div>
 
