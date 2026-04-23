@@ -77,7 +77,7 @@ export function FoodCard({ id, name, price, description, image, taste, spicy }: 
         {/* Stats bar */}
         <div className="mb-4 space-y-1">
           <div className="flex items-center gap-2">
-            <span className="text-[8px] text-[#FFFFB0] w-16">SWEAT:</span>
+            <span className="text-[8px] text-[#FFFFB0] w-16">SWEET:</span>
             <div className="flex-1 bg-black border border-[#FF9B00] h-2">
               <div className="h-full bg-[#FF9B00]" style={{ width: `${taste}%` }} />
             </div>

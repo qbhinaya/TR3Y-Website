@@ -1,17 +1,32 @@
 import { useCart } from '../context/CartContext';
 import { useNavigate } from 'react-router';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
-import { Trash2, Plus, Minus, ShoppingCart, ArrowLeft, Send } from 'lucide-react';
+import { Trash2, Plus, Minus, ShoppingCart, ArrowLeft, Send, User, X} from 'lucide-react';
+import { useState } from 'react';
 
 export function Cart() {
   const { cart, removeFromCart, updateQuantity, getTotalPrice, getTotalItems, clearCart } = useCart();
   const navigate = useNavigate();
+  const [showCheckoutForm, setShowCheckoutForm] = useState(false);
+  const [customerName, setCustomerName] = useState('');
 
-  const handleCheckout = () => {
+  const handleOpenCheckoutForm = () => {
     if (cart.length === 0) return;
+    setShowCheckoutForm(true);
+  };
 
+  const handleSendToWhatsApp = () => {
+    if (!customerName.trim()) {
+      alert('Mohon isi nama Anda terlebih dahulu!');
+      return;
+    }
+
+    // Build WhatsApp message
     let message = '🛒 *PESANAN BARU*\n\n';
-    
+    message += `👤 *Nama:* ${customerName}\n\n`;
+    message += `━━━━━━━━━━━━━━━\n`;
+    message += `*DETAIL PESANAN:*\n\n`;
+
     cart.forEach((item, index) => {
       const itemTotal = item.price * item.quantity;
       message += `${index + 1}. *${item.name}*\n`;
@@ -25,10 +40,22 @@ export function Cart() {
     message += `Total Item: ${getTotalItems()}\n\n`;
     message += `Mohon konfirmasi pesanan saya. Terima kasih! 🙏`;
 
+    // Encode message for URL
     const encodedMessage = encodeURIComponent(message);
-    const whatsappNumber = '62895611877758';
+
+    // WhatsApp number (without +, spaces, or dashes)
+    const whatsappNumber = '62895611877758'; // Ganti dengan nomor WA bisnis Anda
+
+    // Open WhatsApp
     const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
     window.open(whatsappUrl, '_blank');
+
+    // Close modal and reset
+    setShowCheckoutForm(false);
+    setCustomerName('');
+
+    // Optional: Clear cart after checkout
+    // clearCart();
   };
 
   const formatPrice = (price: number) => {
@@ -201,13 +228,110 @@ export function Cart() {
                   <Trash2 className="w-4 h-4 text-white" />
                 </button>
 
+                {/* Checkout Button */}
+              <button
+                onClick={handleOpenCheckoutForm}
+                className="w-full bg-[#FF9B00] hover:bg-[#FFFFB0] border-4 border-black py-3 px-6 transition-colors pixel-box-shadow flex items-center justify-center gap-3 cursor-pointer"
+              >
+                <Send className="w-5 h-5 text-white" />
+                <span className="text-sm text-white">CHECKOUT VIA WHATSAPP</span>
+              </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Checkout Form Modal */}
+      {showCheckoutForm && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm">
+          <div className="relative w-full max-w-md">
+            {/* Modal Box */}
+            <div className="bg-black border-8 border-[#FF9B00] pixel-box-shadow">
+              {/* Header */}
+              <div className="bg-[#FF9B00] border-b-4 border-white p-4 flex items-center justify-between">
+                <h2 className="text-base sm:text-lg text-white flex items-center gap-2">
+                  <User className="w-5 h-5" />
+                  INFORMASI PEMESAN
+                </h2>
                 <button
-                  onClick={handleCheckout}
-                  className="flex-1 bg-[#FF9B00] hover:bg-[#FFFFB0] border-4 border-black py-2.5 transition-colors pixel-box-shadow flex items-center justify-center gap-2 cursor-pointer"
+                  onClick={() => {
+                    setShowCheckoutForm(false);
+                    setCustomerName('');
+                  }}
+                  className="bg-red-600 hover:bg-red-700 border-4 border-white p-2 pixel-box-shadow transition-colors"
                 >
-                  <Send className="w-4 h-4 text-white flex-shrink-0" />
-                  <span className="text-xs sm:text-sm text-white whitespace-nowrap">CHECKOUT VIA WHATSAPP</span>
+                  <X className="w-4 h-4 text-white" />
                 </button>
+              </div>
+
+              {/* Form Content */}
+              <div className="p-6">
+                <div className="bg-[#1a1a2e] border-2 border-[#FFFFB0] p-4 mb-6">
+                  <p className="text-xs text-white text-center mb-2">
+                    Silakan isi nama Anda sebelum melanjutkan pesanan ke WhatsApp
+                  </p>
+                  <div className="h-1 w-full bg-[#FF9B00] my-3" />
+                  <div className="text-center">
+                    <div className="text-xs text-gray-400 mb-2">Total Pesanan:</div>
+                    <div className="inline-block bg-[#FF9B00] border-4 border-white px-6 py-2 pixel-box-shadow">
+                      <span className="text-lg text-white">{formatPrice(getTotalPrice())}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Name Input */}
+                <div className="mb-6">
+                  <label className="block text-xs text-[#FFFFB0] mb-2 flex items-center gap-2">
+                    <User className="w-4 h-4" />
+                    NAMA LENGKAP <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={customerName}
+                    onChange={(e) => setCustomerName(e.target.value)}
+                    placeholder="Masukkan nama Anda..."
+                    className="w-full bg-white border-4 border-[#FF9B00] px-4 py-3 text-sm text-[#FF9B00] placeholder:text-gray-400 focus:outline-none focus:border-[#FFFFB0] pixel-box-shadow"
+                    autoFocus
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter') {
+                        handleSendToWhatsApp();
+                      }
+                    }}
+                  />
+                  <p className="text-[10px] text-gray-400 mt-2">
+                    * Nama akan dikirim bersama pesanan Anda
+                  </p>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="space-y-2">
+                  <button
+                    onClick={handleSendToWhatsApp}
+                    disabled={!customerName.trim()}
+                    className="w-full bg-[#FFFFB0] hover:bg-[#FF9B00] disabled:bg-gray-600 border-4 border-black py-3 px-6 transition-colors pixel-box-shadow flex items-center justify-center gap-3 animate-pulse-pixel disabled:animate-none cursor-pointer"
+                  >
+                    <Send className="w-5 h-5 text-[#FF9B00]" />
+                    <span className="text-sm text-[#FF9B00]">PESAN VIA WHATSAPP</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setShowCheckoutForm(false);
+                      setCustomerName('');
+                    }}
+                    className="w-full bg-white hover:bg-gray-200 border-4 border-black py-2 px-6 transition-colors pixel-box-shadow cursor-pointer"
+                  >
+                    <span className="text-xs text-gray-700">BATAL</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Footer Decoration */}
+              <div className="bg-[#FF9B00] border-t-4 border-white p-2">
+                <div className="text-center text-[10px] text-white">
+                  ⚡ PASTIKAN DATA ANDA BENAR ⚡
+                </div>
               </div>
             </div>
           </div>
