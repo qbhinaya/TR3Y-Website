@@ -259,7 +259,7 @@ export function Cart() {
                     setShowCheckoutForm(false);
                     setCustomerName('');
                   }}
-                  className="bg-red-600 hover:bg-red-700 border-4 border-white p-2 pixel-box-shadow transition-colors"
+                  className="bg-red-600 hover:bg-red-700 border-4 border-white p-2 pixel-box-shadow transition-colors cursor-pointer"
                 >
                   <X className="w-4 h-4 text-white" />
                 </button>
@@ -309,10 +309,10 @@ export function Cart() {
                   <button
                     onClick={handleSendToWhatsApp}
                     disabled={!customerName.trim()}
-                    className="w-full bg-[#FFFFB0] hover:bg-[#FF9B00] disabled:bg-gray-600 border-4 border-black py-3 px-6 transition-colors pixel-box-shadow flex items-center justify-center gap-3 animate-pulse-pixel disabled:animate-none cursor-pointer"
+                    className="w-full bg-[#FF9B00] hover:bg-[#FFFFB0] border-4 border-black py-3 px-6 transition-colors pixel-box-shadow flex items-center justify-center gap-3 animate-pulse-pixel disabled:animate-none cursor-pointer"
                   >
-                    <Send className="w-5 h-5 text-[#FF9B00]" />
-                    <span className="text-sm text-[#FF9B00]">PESAN VIA WHATSAPP</span>
+                    <Send className="w-5 h-5 text-white" />
+                    <span className="text-sm text-white">PESAN VIA WHATSAPP</span>
                   </button>
 
                   <button
